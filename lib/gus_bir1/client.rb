@@ -21,6 +21,14 @@ module GusBir1
       get_value(Constants::PARAM_PARAM_NAME => Constants::PARAM_STATUS_DATE_STATE)
     end
 
+    def get_summary(report_date:, report_name:)
+      set_session_id
+      Response::Summary.new(dane_pobierz_raport_zbiorczy(
+        Constants::PARAM_REPORT_DATE => report_date,
+        Constants::PARAM_REPORT_NAME => report_name
+      )).to_h
+    end
+
     def find_by(nip: nil, regon: nil, krs: nil, nips: nil, krss: nil, regons14: nil, regons9: nil)
       types = [nip, regon, krs, nips, krss, regons14, regons9].compact
       raise TooMuchTypesSelected if types.size > 1
@@ -98,6 +106,7 @@ module GusBir1
           :wyloguj,
           :dane_szukaj_podmioty,
           :dane_pobierz_pelny_raport,
+          :dane_pobierz_raport_zbiorczy,
           :dane_komunikat,
           :zaloguj
         savon_client_publ.call(method, message: message)
